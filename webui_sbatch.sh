@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH --job-name=SDWebUI
 #SBATCH --mail-type=ALL               # Mail events (NONE, BEGIN, END, FAIL, ALL)
-#SBATCH --mail-user=stenner@ufl.edu   # Where to send mail
+#SBATCH --mail-user=<GATORUSERNAME>@ufl.edu   # Where to send mail
 #SBATCH --nodes=1                     # Use one node
 #SBATCH --ntasks=1                    # Run a single task
 #SBATCH --cpus-per-task=1             # Use 1 core
@@ -16,7 +16,13 @@
 
 date;hostname;pwd
 
+# You should have previously created a module savelist called "webui"
+# consisting of 1) ufrc   2) cuda/11.4.3   3) gcc/9.3.0   4) git/2.30.1   5) python/3.10
 module r webui
+# Since AUTOMATIC1111/stable-diffusion-webui offers to make videos, 
+# let's load ffmpeg (could be incorporated with webui savelist if preferred).
+module load ffmpeg/4.3.1
+# activate the python virtual environment created during initial install.
 source venv/bin/activate
 
 unset XDG_RUNTIME_DIR
@@ -27,17 +33,9 @@ echo -e "\nStarting Stable Diffusion WebUI on port ${port} on the $(hostname) se
 echo -e "\nSSH tunnel command:"
 echo -e "\tssh -NL ${port}:$(hostname):${port} ${USER}@hpg.rc.ufl.edu"
 echo -e "\nLocal browser URI:"
-echo -e "\thttp://0.0.0.0:${port}"
+echo -e "\thttp://127.0.0.1:${port}"
 host=$(hostname)
 
 # Change USERNAME and PASSWD below to something you'll remember.
 # This is also where you'll add any commandline arguments you need to run things.
 python launch.py --listen --port ${port} --gradio-auth USERNAME:PASSWD --disable-safe-unpickle
-
-# For additional details see: https://help.rc.ufl.edu/doc/Remote_Jupyter_Notebook
-# To set a password, on a login node, use these commands:
-#     module load jupyter
-#     jupyter-notebook password
-# You will be asked to enter a password and confirm that password.
-# This password can then be used to connect to the notebooks without
-# needing the token.
