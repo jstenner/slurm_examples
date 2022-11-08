@@ -5,7 +5,7 @@
 #SBATCH --nodes=1                     # Use one node
 #SBATCH --ntasks=1                    # Run a single task
 #SBATCH --cpus-per-task=1             # Use 1 core
-#SBATCH --mem=32gb                    # Memory limit
+#SBATCH --mem=16gb                    # Memory limit
 #SBATCH --partition=gpu               # Required for GPUs
 #SBATCH --gpus=a100:1                 # Specify GPU type
 #SBATCH --time=04:00:00               # Time limit hrs:min:sec, or 7-0 for days + hrs
@@ -21,6 +21,7 @@ date;hostname;pwd
 module r webui
 # Since AUTOMATIC1111/stable-diffusion-webui offers to make videos, 
 # let's load ffmpeg (could be incorporated with webui savelist if preferred).
+# If you've already included ffmpeg in your webui savelist, then comment this line out:
 module load ffmpeg/4.3.1
 # activate the python virtual environment created during initial install.
 source venv/bin/activate
