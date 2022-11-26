@@ -27,6 +27,8 @@ module load ffmpeg/4.3.1
 source venv/bin/activate
 
 unset XDG_RUNTIME_DIR
+# This helps with Out of Memory errors on HiPerGator A100s
+export 'PYTORCH_CUDA_ALLOC_CONF=max_split_size_mb:512'
 
 port=$(shuf -i 20000-30000 -n 1)
 
@@ -39,4 +41,5 @@ host=$(hostname)
 
 # Change USERNAME and PASSWD below to something you'll remember.
 # This is also where you'll add any commandline arguments you need to run things.
-python launch.py --listen --port ${port} --gradio-auth USERNAME:PASSWD --disable-safe-unpickle
+python launch.py --listen --port ${port} --gradio-auth USERNAME:PASSWD --disable-safe-unpickle --enable-insecure-extension-access --precision=full --no-half
+ --no-half-vae
